@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo"
-	"../models"
+	"github.com/alice02/go_react_todoapp/models"
 )
 
 // GET /api/todo

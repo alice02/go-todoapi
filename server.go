@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"./controllers"
+	"github.com/alice02/go_react_todoapp/controllers"
 )
 
 	
