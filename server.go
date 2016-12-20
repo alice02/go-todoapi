@@ -1,35 +1,26 @@
 package main
 
 import (
-	"net/http"
-	
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"./controllers"
 )
 
-type User struct {
-	Name string `json:"name"`
-	Email string `json:"email"`
-}
 	
-
-func todoList(c echo.Context) error {
-	u := &User{
-		Name: "Jon",
-		Email: "jon@labstack.com",
-	}
-	return c.JSON(http.StatusOK, u)
-}
-
 func main() {
 	e := echo.New()
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
+	// routing
+	api := e.Group("/api")
+	api.GET("/todo", controllers.GetTodos)
+	api.GET("/todo/:id", controllers.GetTodo)
+	api.POST("/todo", controllers.PostTodo)
+	api.PUT("/todo/:id", controllers.PutTodo)
+	api.DELETE("/todo/:id", controllers.DeleteTodo)
 
-	g := e.Group("/api")
-	g.GET("/", todoList)
-
+	// listen on port 1323
 	e.Logger.Debug(e.Start(":1323"))
 }
