@@ -1,2 +1,5 @@
 # ignore emacs backup file
 *~
+
+# ignore sqlite db file
+todo.db

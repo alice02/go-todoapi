@@ -4,12 +4,15 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"github.com/alice02/go_react_todoapp/controllers"
+	"github.com/alice02/go_react_todoapp/database"
 )
 
 	
 func main() {
+	// initialize database
+	database.InitDb()
+	
 	e := echo.New()
-
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
