@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	db *gorm.DB
+	db  *gorm.DB
 	err error
 )
 
@@ -23,6 +23,6 @@ func InitDb() {
 	db.AutoMigrate(&models.Todo{})
 }
 
-func GetDb() *gorm.DB{
+func GetDb() *gorm.DB {
 	return db
 }
