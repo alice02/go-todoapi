@@ -2,6 +2,8 @@ package models
 
 import (
 	"time"
+
+	"github.com/go-ozzo/ozzo-validation"
 )
 
 type Task struct {
@@ -11,4 +13,10 @@ type Task struct {
 	DeletedAt   *time.Time `json:"-"`
 	Description string     `json:"description"`
 	Completed   bool       `json:"completed"`
+}
+
+func (t Task) Validate() error {
+	return validation.ValidateStruct(&t,
+		validation.Field(&t.Description, validation.Required, validation.Length(1, 140)),
+	)
 }

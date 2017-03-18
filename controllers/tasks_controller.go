@@ -6,7 +6,6 @@ import (
 
 	"github.com/alice02/go_react_todoapp/database"
 	"github.com/alice02/go_react_todoapp/models"
-	"github.com/asaskevich/govalidator"
 	"github.com/labstack/echo"
 )
 
@@ -72,13 +71,24 @@ func PostTask(c echo.Context) error {
 
 	task := new(models.Task)
 	if err := c.Bind(task); err != nil {
-		response := ResponseMessage{}
+		data := Data{
+			Info: "invalid request body",
+		}
+		response := ResponseMessage{
+			Status: "fail",
+			Data:   data,
+		}
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
-	_, err := govalidator.ValidateStruct(task)
-	if err != nil {
-		response := ResponseMessage{}
+	if err := task.Validate(); err != nil {
+		data := Data{
+			Info: err.Error(),
+		}
+		response := ResponseMessage{
+			Status: "fail",
+			Data:   data,
+		}
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
@@ -92,9 +102,24 @@ func PutTask(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 	task, _ := fetchTaskById(id)
 
-	if err := c.Bind(&task); err != nil {
+	if err := c.Bind(task); err != nil {
+		data := Data{
+			Info: "invalid request body",
+		}
 		response := ResponseMessage{
-			Message: err.Error(),
+			Status: "fail",
+			Data:   data,
+		}
+		return c.JSON(http.StatusBadRequest, response)
+	}
+
+	if err := task.Validate(); err != nil {
+		data := Data{
+			Info: err.Error(),
+		}
+		response := ResponseMessage{
+			Status: "fail",
+			Data:   data,
 		}
 		return c.JSON(http.StatusBadRequest, response)
 	}
