@@ -4,8 +4,8 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 
-	"github.com/alice02/go_react_todoapp/controllers"
-	"github.com/alice02/go_react_todoapp/database"
+	"github.com/alice02/go-todoapi/controllers"
+	"github.com/alice02/go-todoapi/database"
 )
 
 func main() {

@@ -4,7 +4,7 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 
-	"github.com/alice02/go_react_todoapp/models"
+	"github.com/alice02/go-todoapi/models"
 )
 
 var (

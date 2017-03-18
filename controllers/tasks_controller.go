@@ -1,11 +1,12 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
-	"github.com/alice02/go_react_todoapp/database"
-	"github.com/alice02/go_react_todoapp/models"
+	"github.com/alice02/go-todoapi/database"
+	"github.com/alice02/go-todoapi/models"
 	"github.com/labstack/echo"
 )
 
@@ -55,7 +56,7 @@ func GetTask(c echo.Context) error {
 	}
 
 	data := Data{
-		Task: &task,
+		Task: task,
 	}
 	response := ResponseMessage{
 		Status: "success",
@@ -100,9 +101,20 @@ func PostTask(c echo.Context) error {
 // PUT /api/task/:id
 func PutTask(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
-	task, _ := fetchTaskById(id)
+	task, err := fetchTaskById(id)
+	if err != nil {
+		data := Data{
+			Info: err.Error(),
+		}
+		response := ResponseMessage{
+			Status: "fail",
+			Data:   data,
+		}
+		return c.JSON(http.StatusNotFound, response)
+	}
 
 	if err := c.Bind(task); err != nil {
+		fmt.Println(err)
 		data := Data{
 			Info: "invalid request body",
 		}
@@ -125,7 +137,7 @@ func PutTask(c echo.Context) error {
 	}
 
 	db := database.GetDb()
-	db.Save(&task)
+	db.Save(task)
 
 	return c.JSON(http.StatusOK, task)
 }
@@ -141,13 +153,13 @@ func DeleteTask(c echo.Context) error {
 	return c.JSON(http.StatusOK, nil)
 }
 
-func fetchTaskById(id int) (models.Task, error) {
+func fetchTaskById(id int) (*models.Task, error) {
 	var task models.Task
 
 	db := database.GetDb()
 	if err := db.First(&task, id).Error; err != nil {
-		return task, err
+		return &task, err
 	}
 
-	return task, nil
+	return &task, nil
 }
