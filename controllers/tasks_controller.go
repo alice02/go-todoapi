@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -18,24 +17,21 @@ type ResponseMessage struct {
 }
 
 type Data struct {
-	Todos []models.Todo `json:"tasks,omitempty"`
-	Todo  *models.Todo  `json:"task,omitempty"`
+	Tasks []models.Task `json:"tasks,omitempty"`
+	Task  *models.Task  `json:"task,omitempty"`
 	Info  string        `json:"info,omitempty"`
 }
 
-// GET /api/todo
-func GetTodos(c echo.Context) error {
-	var todos []models.Todo
+// GET /api/task
+func GetTasks(c echo.Context) error {
+	var tasks []models.Task
 
 	db := database.GetDb()
-	db.Find(&todos)
-
-	fmt.Println(todos)
+	db.Find(&tasks)
 
 	data := Data{
-		Todos: todos,
+		Tasks: tasks,
 	}
-	fmt.Println(data)
 	response := ResponseMessage{
 		Status: "success",
 		Data:   data,
@@ -44,10 +40,10 @@ func GetTodos(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
-// GET /api/todo/:id
-func GetTodo(c echo.Context) error {
+// GET /api/task/:id
+func GetTask(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
-	todo, err := fetchTodoById(id)
+	task, err := fetchTaskById(id)
 	if err != nil {
 		data := Data{
 			Info: err.Error(),
@@ -60,7 +56,7 @@ func GetTodo(c echo.Context) error {
 	}
 
 	data := Data{
-		Todo: &todo,
+		Task: &task,
 	}
 	response := ResponseMessage{
 		Status: "success",
@@ -70,33 +66,33 @@ func GetTodo(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
-// POST /api/todo
-func PostTodo(c echo.Context) error {
+// POST /api/task
+func PostTask(c echo.Context) error {
 	db := database.GetDb()
 
-	todo := new(models.Todo)
-	if err := c.Bind(todo); err != nil {
+	task := new(models.Task)
+	if err := c.Bind(task); err != nil {
 		response := ResponseMessage{}
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
-	_, err := govalidator.ValidateStruct(todo)
+	_, err := govalidator.ValidateStruct(task)
 	if err != nil {
 		response := ResponseMessage{}
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
-	db.Create(&todo)
+	db.Create(&task)
 
-	return c.JSON(http.StatusOK, todo)
+	return c.JSON(http.StatusOK, task)
 }
 
-// PUT /api/todo/:id
-func PutTodo(c echo.Context) error {
+// PUT /api/task/:id
+func PutTask(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
-	todo, _ := fetchTodoById(id)
+	task, _ := fetchTaskById(id)
 
-	if err := c.Bind(&todo); err != nil {
+	if err := c.Bind(&task); err != nil {
 		response := ResponseMessage{
 			Message: err.Error(),
 		}
@@ -104,29 +100,29 @@ func PutTodo(c echo.Context) error {
 	}
 
 	db := database.GetDb()
-	db.Save(&todo)
+	db.Save(&task)
 
-	return c.JSON(http.StatusOK, todo)
+	return c.JSON(http.StatusOK, task)
 }
 
-// DELETE /api/todo/:id
-func DeleteTodo(c echo.Context) error {
+// DELETE /api/task/:id
+func DeleteTask(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
-	todo, _ := fetchTodoById(id)
+	task, _ := fetchTaskById(id)
 
 	db := database.GetDb()
-	db.Delete(&todo)
+	db.Delete(&task)
 
 	return c.JSON(http.StatusOK, nil)
 }
 
-func fetchTodoById(id int) (models.Todo, error) {
-	var todo models.Todo
+func fetchTaskById(id int) (models.Task, error) {
+	var task models.Task
 
 	db := database.GetDb()
-	if err := db.First(&todo, id).Error; err != nil {
-		return todo, err
+	if err := db.First(&task, id).Error; err != nil {
+		return task, err
 	}
 
-	return todo, nil
+	return task, nil
 }

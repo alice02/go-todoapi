@@ -4,11 +4,11 @@ import (
 	"time"
 )
 
-type Todo struct {
+type Task struct {
 	ID          uint       `json:"id"`
 	CreatedAt   time.Time  `json:"createdAt"`
 	UpdatedAt   time.Time  `json:"updatedAt"`
 	DeletedAt   *time.Time `json:"-"`
-	Description string     `json:"description" valid:"required,alphanum"`
+	Description string     `json:"description"`
 	Completed   bool       `json:"completed"`
 }

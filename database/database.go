@@ -20,7 +20,7 @@ func InitDb() {
 	}
 
 	// migration
-	db.AutoMigrate(&models.Todo{})
+	db.AutoMigrate(&models.Task{})
 }
 
 func GetDb() *gorm.DB {

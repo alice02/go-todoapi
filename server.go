@@ -18,11 +18,11 @@ func main() {
 
 	// routing
 	api := e.Group("/api")
-	api.GET("/todo", controllers.GetTodos)
-	api.GET("/todo/:id", controllers.GetTodo)
-	api.POST("/todo", controllers.PostTodo)
-	api.PUT("/todo/:id", controllers.PutTodo)
-	api.DELETE("/todo/:id", controllers.DeleteTodo)
+	api.GET("/tasks", controllers.GetTasks)
+	api.GET("/tasks/:id", controllers.GetTask)
+	api.POST("/tasks", controllers.PostTask)
+	api.PUT("/tasks/:id", controllers.PutTask)
+	api.DELETE("/tasks/:id", controllers.DeleteTask)
 
 	// listen on port 1323
 	e.Logger.Debug(e.Start(":1323"))
