@@ -22,7 +22,7 @@ type Data struct {
 	Info  string        `json:"info,omitempty"`
 }
 
-// GET /api/task
+// GET /api/tasks
 func GetTasks(c echo.Context) error {
 	var tasks []models.Task
 
@@ -40,7 +40,7 @@ func GetTasks(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
-// GET /api/task/:id
+// GET /api/tasks/:id
 func GetTask(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 	task, err := fetchTaskById(id)
@@ -66,7 +66,7 @@ func GetTask(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
-// POST /api/task
+// POST /api/tasks
 func PostTask(c echo.Context) error {
 	db := database.GetDb()
 
@@ -98,7 +98,7 @@ func PostTask(c echo.Context) error {
 	return c.JSON(http.StatusOK, task)
 }
 
-// PUT /api/task/:id
+// PUT /api/tasks/:id
 func PutTask(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 	task, err := fetchTaskById(id)
@@ -142,10 +142,20 @@ func PutTask(c echo.Context) error {
 	return c.JSON(http.StatusOK, task)
 }
 
-// DELETE /api/task/:id
+// DELETE /api/tasks/:id
 func DeleteTask(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
-	task, _ := fetchTaskById(id)
+	task, err := fetchTaskById(id)
+	if err != nil {
+		data := Data{
+			Info: err.Error(),
+		}
+		response := ResponseMessage{
+			Status: "fail",
+			Data:   data,
+		}
+		return c.JSON(http.StatusNotFound, response)
+	}
 
 	db := database.GetDb()
 	db.Delete(&task)
