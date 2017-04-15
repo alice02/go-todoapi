@@ -12,7 +12,7 @@ type TaskModelInterface interface {
 	FindByID(id int) (*Task, error)
 	Save(model *Task) error
 	Update(model *Task) error
-	Delete(model Task) error
+	Delete(model *Task) error
 }
 
 type taskModel struct {
@@ -69,14 +69,14 @@ func (t taskModel) Save(model *Task) error {
 }
 
 func (t taskModel) Update(model *Task) error {
-	err := t.session.Update(model)
+	err := t.session.Save(model)
 	if err.Error != nil {
 		return err.Error
 	}
 	return nil
 }
 
-func (t taskModel) Delete(model Task) error {
+func (t taskModel) Delete(model *Task) error {
 	err := t.session.Delete(model)
 	if err.Error != nil {
 		return err.Error
