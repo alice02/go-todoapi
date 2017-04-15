@@ -26,12 +26,10 @@ func main() {
 	taskModel := models.NewTaskModel(db)
 	taskController := controllers.NewTaskController(taskModel)
 	api.GET("/tasks", taskController.GetTasks)
-	/*
-		api.GET("/tasks/:id", controllers.GetTask)
-		api.POST("/tasks", controllers.PostTask)
-		api.PUT("/tasks/:id", controllers.PutTask)
-		api.DELETE("/tasks/:id", controllers.DeleteTask)
-	*/
+	api.GET("/tasks/:id", taskController.GetTask)
+	api.POST("/tasks", taskController.PostTask)
+	api.PUT("/tasks/:id", taskController.PutTask)
+	api.DELETE("/tasks/:id", taskController.DeleteTask)
 	// listen on port 1323
 	e.Logger.Debug(e.Start(":1323"))
 }

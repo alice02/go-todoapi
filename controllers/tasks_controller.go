@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/alice02/go-todoapi/models"
 	"github.com/labstack/echo"
@@ -38,11 +39,10 @@ func (tc taskController) GetTasks(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
-/*
 // GET /api/tasks/:id
-func (ct controller) GetTask(c echo.Context) error {
+func (tc taskController) GetTask(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
-	task, err := fetchTaskById(id)
+	task, err := tc.taskModel.FindByID(id)
 	if err != nil {
 		data := Data{
 			Info: err.Error(),
@@ -66,9 +66,7 @@ func (ct controller) GetTask(c echo.Context) error {
 }
 
 // POST /api/tasks
-func (ct controller) PostTask(c echo.Context) error {
-	db := database.GetDb()
-
+func (tc taskController) PostTask(c echo.Context) error {
 	task := new(models.Task)
 	if err := c.Bind(task); err != nil {
 		data := Data{
@@ -92,15 +90,33 @@ func (ct controller) PostTask(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
-	db.Create(&task)
+	err := tc.taskModel.Save(task)
+	if err != nil {
+		data := Data{
+			Info: err.Error(),
+		}
+		response := ResponseMessage{
+			Status: "fail",
+			Data:   data,
+		}
+		return c.JSON(http.StatusInternalServerError, response)
+	}
 
-	return c.JSON(http.StatusOK, task)
+	data := Data{
+		Task: task,
+	}
+	response := ResponseMessage{
+		Status: "success",
+		Data:   data,
+	}
+
+	return c.JSON(http.StatusOK, response)
 }
 
 // PUT /api/tasks/:id
-func PutTask(c echo.Context) error {
+func (tc taskController) PutTask(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
-	task, err := fetchTaskById(id)
+	task, err := tc.taskModel.FindByID(id)
 	if err != nil {
 		data := Data{
 			Info: err.Error(),
@@ -113,7 +129,6 @@ func PutTask(c echo.Context) error {
 	}
 
 	if err := c.Bind(task); err != nil {
-		fmt.Println(err)
 		data := Data{
 			Info: "invalid request body",
 		}
@@ -135,16 +150,33 @@ func PutTask(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
-	db := database.GetDb()
-	db.Save(task)
+	err = tc.taskModel.Update(task)
+	if err != nil {
+		data := Data{
+			Info: err.Error(),
+		}
+		response := ResponseMessage{
+			Status: "fail",
+			Data:   data,
+		}
+		return c.JSON(http.StatusInternalServerError, response)
+	}
 
-	return c.JSON(http.StatusOK, task)
+	data := Data{
+		Task: task,
+	}
+	response := ResponseMessage{
+		Status: "success",
+		Data:   data,
+	}
+
+	return c.JSON(http.StatusOK, response)
 }
 
 // DELETE /api/tasks/:id
-func DeleteTask(c echo.Context) error {
+func (tc taskController) DeleteTask(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
-	task, err := fetchTaskById(id)
+	task, err := tc.taskModel.FindByID(id)
 	if err != nil {
 		data := Data{
 			Info: err.Error(),
@@ -156,20 +188,21 @@ func DeleteTask(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, response)
 	}
 
-	db := database.GetDb()
-	db.Delete(&task)
-
-	return c.JSON(http.StatusOK, nil)
-}
-
-func fetchTaskById(id int) (*models.Task, error) {
-	var task models.Task
-
-	db := database.GetDb()
-	if err := db.First(&task, id).Error; err != nil {
-		return &task, err
+	err = tc.taskModel.Delete(task)
+	if err != nil {
+		data := Data{
+			Info: err.Error(),
+		}
+		response := ResponseMessage{
+			Status: "fail",
+			Data:   data,
+		}
+		return c.JSON(http.StatusInternalServerError, response)
 	}
 
-	return &task, nil
+	response := ResponseMessage{
+		Status: "success",
+	}
+
+	return c.JSON(http.StatusOK, response)
 }
-*/
