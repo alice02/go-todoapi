@@ -3,3 +3,6 @@
 
 # ignore sqlite db file
 todo.db
+
+# ignore node packages
+node_modules
