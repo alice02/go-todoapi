@@ -33,8 +33,12 @@ func NewTaskModel(db *gorm.DB) *taskModel {
 }
 
 func (t Task) Validate() error {
-	return validation.ValidateStruct(&t,
-		validation.Field(&t.Description, validation.Required, validation.Length(1, 140)),
+	return validation.ValidateStruct(
+		&t,
+		validation.Field(
+			&t.Description,
+			validation.Required,
+			validation.Length(1, 140)),
 	)
 }
 
@@ -57,13 +61,25 @@ func (t taskModel) FindByID(id int) (*Task, error) {
 }
 
 func (t taskModel) Save(model *Task) error {
+	err := t.session.Create(model)
+	if err != nil {
+		return err.Error
+	}
 	return nil
 }
 
 func (t taskModel) Update(model *Task) error {
+	err := t.session.Update(model)
+	if err != nil {
+		return err.Error
+	}
 	return nil
 }
 
 func (t taskModel) Delete(model Task) error {
+	err := t.session.Delete(model)
+	if err != nil {
+		return err.Error
+	}
 	return nil
 }
