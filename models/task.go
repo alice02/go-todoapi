@@ -45,7 +45,7 @@ func (t Task) Validate() error {
 func (t taskModel) FindAll() ([]Task, error) {
 	tasks := []Task{}
 	err := t.session.Find(&tasks)
-	if err != nil {
+	if err.Error != nil {
 		return nil, err.Error
 	}
 	return tasks, nil
@@ -54,7 +54,7 @@ func (t taskModel) FindAll() ([]Task, error) {
 func (t taskModel) FindByID(id int) (*Task, error) {
 	task := &Task{}
 	err := t.session.First(task, id)
-	if err != nil {
+	if err.Error != nil {
 		return nil, err.Error
 	}
 	return task, nil
@@ -62,7 +62,7 @@ func (t taskModel) FindByID(id int) (*Task, error) {
 
 func (t taskModel) Save(model *Task) error {
 	err := t.session.Create(model)
-	if err != nil {
+	if err.Error != nil {
 		return err.Error
 	}
 	return nil
@@ -70,7 +70,7 @@ func (t taskModel) Save(model *Task) error {
 
 func (t taskModel) Update(model *Task) error {
 	err := t.session.Update(model)
-	if err != nil {
+	if err.Error != nil {
 		return err.Error
 	}
 	return nil
@@ -78,7 +78,7 @@ func (t taskModel) Update(model *Task) error {
 
 func (t taskModel) Delete(model Task) error {
 	err := t.session.Delete(model)
-	if err != nil {
+	if err.Error != nil {
 		return err.Error
 	}
 	return nil
