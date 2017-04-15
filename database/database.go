@@ -3,26 +3,12 @@ package database
 import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-
-	"github.com/alice02/go-todoapi/models"
 )
 
-var (
-	db  *gorm.DB
-	err error
-)
-
-func InitDb() {
-	// connect to database
-	db, err = gorm.Open("sqlite3", "todo.db")
+func NewDB() (*gorm.DB, error) {
+	db, err := gorm.Open("sqlite3", "todo.db")
 	if err != nil {
-		panic("failed to connect database")
+		return nil, err
 	}
-
-	// migration
-	db.AutoMigrate(&models.Task{})
-}
-
-func GetDb() *gorm.DB {
-	return db
+	return db, nil
 }

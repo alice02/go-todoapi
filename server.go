@@ -6,11 +6,15 @@ import (
 
 	"github.com/alice02/go-todoapi/controllers"
 	"github.com/alice02/go-todoapi/database"
+	"github.com/alice02/go-todoapi/models"
 )
 
 func main() {
 	// initialize database
-	database.InitDb()
+	db, err := database.NewDB()
+	if err != nil {
+		panic("database connect failed")
+	}
 
 	e := echo.New()
 	e.Use(middleware.Logger())
@@ -18,12 +22,16 @@ func main() {
 
 	// routing
 	api := e.Group("/api")
-	api.GET("/tasks", controllers.GetTasks)
-	api.GET("/tasks/:id", controllers.GetTask)
-	api.POST("/tasks", controllers.PostTask)
-	api.PUT("/tasks/:id", controllers.PutTask)
-	api.DELETE("/tasks/:id", controllers.DeleteTask)
-
+	// tasks
+	taskModel := models.NewTaskModel(db)
+	taskController := controllers.NewTaskController(taskModel)
+	api.GET("/tasks", taskController.GetTasks)
+	/*
+		api.GET("/tasks/:id", controllers.GetTask)
+		api.POST("/tasks", controllers.PostTask)
+		api.PUT("/tasks/:id", controllers.PutTask)
+		api.DELETE("/tasks/:id", controllers.DeleteTask)
+	*/
 	// listen on port 1323
 	e.Logger.Debug(e.Start(":1323"))
 }

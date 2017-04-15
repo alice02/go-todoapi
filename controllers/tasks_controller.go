@@ -1,34 +1,32 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
-	"strconv"
 
-	"github.com/alice02/go-todoapi/database"
 	"github.com/alice02/go-todoapi/models"
 	"github.com/labstack/echo"
 )
 
-type ResponseMessage struct {
-	Status  string `json:"status"`
-	Data    Data   `json:"data"`
-	Message string `json:"message,omitempty"`
-}
+type (
+	taskController struct {
+		taskModel models.TaskModelInterface
+	}
+)
 
-type Data struct {
-	Tasks []models.Task `json:"tasks,omitempty"`
-	Task  *models.Task  `json:"task,omitempty"`
-	Info  string        `json:"info,omitempty"`
+func NewTaskController(t models.TaskModelInterface) *taskController {
+	return &taskController{t}
 }
 
 // GET /api/tasks
-func GetTasks(c echo.Context) error {
-	var tasks []models.Task
-
-	db := database.GetDb()
-	db.Find(&tasks)
-
+func (tc taskController) GetTasks(c echo.Context) error {
+	tasks, err := tc.taskModel.FindAll()
+	if err != nil {
+		response := ResponseMessage{
+			Status:  "failed",
+			Message: err.Error(),
+		}
+		return c.JSON(http.StatusInternalServerError, response)
+	}
 	data := Data{
 		Tasks: tasks,
 	}
@@ -40,8 +38,9 @@ func GetTasks(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
+/*
 // GET /api/tasks/:id
-func GetTask(c echo.Context) error {
+func (ct controller) GetTask(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 	task, err := fetchTaskById(id)
 	if err != nil {
@@ -67,7 +66,7 @@ func GetTask(c echo.Context) error {
 }
 
 // POST /api/tasks
-func PostTask(c echo.Context) error {
+func (ct controller) PostTask(c echo.Context) error {
 	db := database.GetDb()
 
 	task := new(models.Task)
@@ -173,3 +172,4 @@ func fetchTaskById(id int) (*models.Task, error) {
 
 	return &task, nil
 }
+*/
