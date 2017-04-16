@@ -19,6 +19,7 @@ func main() {
 	e := echo.New()
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	e.Static("/", "build")
 
 	// routing
 	api := e.Group("/api")
