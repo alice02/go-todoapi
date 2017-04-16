@@ -6,3 +6,4 @@ todo.db
 
 # ignore node packages
 node_modules
+build
