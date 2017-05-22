@@ -1,12 +1,11 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 
 const TodoList = ({ todos }) => (
-  <ul>{todos.map(todo =>
-    <li>{todo.text}</li> )}</ul>
+  <ul>
+    {todos.map(todo =>
+      <li>{todo.description}</li>
+     )}
+  </ul>
 )
-
-TodoList.proptypes = {
-  todos: PropTypes.array.isRequired
-}
 
 export default TodoList;

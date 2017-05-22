@@ -1,12 +1,28 @@
 import React from 'react';
-import VisibleTodoList from '../containers/VisibleTodoList';
-import AddTodo from '../containers/AddTodo';
+import TodoList from './TodoList';
+import axios from 'axios';
 
-const App = () => (
-  <div>
-    <AddTodo />
-    <VisibleTodoList />
-  </div>
-)
+export default class App extends React.Component {
 
-export default App;
+  constructor(props) {
+    super(props);
+    this.state = {todos: []};
+  }
+
+  componentDidMount() {
+    axios.get('/api/tasks').then((response) => {
+      this.setState({todos: response.data.data.tasks});
+    }).catch((response) => {
+      console.log("Error", response);
+    })
+  }
+
+  render() {
+    return (
+      <div>
+        <TodoList todos={this.state.todos}/>
+      </div>
+    );
+  }
+
+}
