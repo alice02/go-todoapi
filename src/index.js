@@ -10,6 +10,8 @@ const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
 const store = createStoreWithMiddleware(rootReducer)
 
 render(
-  <App />,
+  <Provider store={store}>
+    <App />
+  </Provider>,
   document.querySelector('#root')
 );
