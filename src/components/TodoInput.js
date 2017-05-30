@@ -4,7 +4,6 @@ import ReactDOM from "react-dom";
 class TodoInput extends React.Component {
   handleClick() {
     const description = ReactDOM.findDOMNode(this.refs.description).value;
-    console.log(description);
     this.props.save(description);
   }
 
