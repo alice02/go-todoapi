@@ -8,13 +8,25 @@ import {
 function todoList(state = {isFetching: false, todos: []}, action) {
   switch(action.type) {
     case FETCH_TODOS:
-      return state;
+      return Object.assign({}, state, {
+        isFetching: true
+      });
     case RECEIVE_TODOS:
-      return state;
+      return Object.assign({}, state, {
+        isFetching: false,
+        todos: action.todos
+      });
     case ADD_TODO:
-      return state;
+      return Object.assign({}, state, {
+        todos: [
+          ...state.todos,
+          action.todo
+        ]
+      });
     case SAVE_TODO:
-      return state;
+      return Object.assign({}, state, {
+        todos: state.todos
+      });
     default:
       return state;
   }
