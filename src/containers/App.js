@@ -1,9 +1,13 @@
 import React from "react";
 import TodoInput from "./TodoInput";
+import TodoList from "./TodoList";
 
 const App = () => {
   return (
-    <TodoInput />
+    <div>
+      <TodoInput />
+      <TodoList />
+    </div>
   );
 }
 
