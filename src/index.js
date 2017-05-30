@@ -5,9 +5,12 @@ import { createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import App from "./containers/App";
 import rootReducer from "./reducers";
+import { getTodosIfNeeded } from "./actions";
 
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
 const store = createStoreWithMiddleware(rootReducer)
+
+store.dispatch(getTodosIfNeeded())
 
 render(
   <Provider store={store}>
