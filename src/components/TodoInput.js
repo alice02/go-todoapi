@@ -16,6 +16,7 @@ class TodoInput extends React.Component {
         <TextField
           floatingLabelText="description"
           ref="description"
+          errorText={this.props.message}
         />
         <RaisedButton
           label="Add"

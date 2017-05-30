@@ -26,6 +26,14 @@ export function addTodo(todo) {
   };
 }
 
+export const ADD_FAILED= "ADD_FAILED";
+export function addFailed(message) {
+  return {
+    type: ADD_FAILED,
+    message: message
+  };
+}
+
 export const SAVE_TODO = "SAVE_TODO";
 export function saveTodo(todo) {
   return {
@@ -42,6 +50,8 @@ export function createTodo(description) {
          .then(response => {
            todo.id = response.data.data.id;
            dispatch(saveTodo(todo));
+         }).catch(error => {
+           dispatch(addFailed(error.response.data.data.info));
          });
   }
 }
