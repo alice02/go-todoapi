@@ -4,7 +4,9 @@ import TodoInputComponent from "../components/TodoInput";
 
 
 function mapStateToProps(state) {
-  return state;
+  return {
+    isFetching: state.todoList.isFetching
+  };
 }
 
 function mapDispatchToProps(dispatch) {
