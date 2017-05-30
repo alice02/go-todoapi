@@ -38,10 +38,8 @@ export function createTodo(description) {
   var todo = {completed: false, description: description};
   return (dispatch, getState) => {
     dispatch(addTodo(todo));
-    console.log(todo);
     axios.post("/api/tasks", todo)
          .then(response => {
-           console.log(response);
            todo.id = response.data.data.id;
            dispatch(saveTodo(todo));
          });
@@ -61,7 +59,7 @@ function getTodos(store) {
     dispatch(fetchTodos());
     return axios.get("/api/tasks")
     .then(response => {
-      dispatch(receiveTodos(response.data.data));
+      dispatch(receiveTodos(response.data.data.tasks));
     });
   };
 }
