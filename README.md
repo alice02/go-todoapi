@@ -1,1 +1,4 @@
-# go_react_todoapp
+# go-todoapi
+- Golang
+- React
+- Redux
