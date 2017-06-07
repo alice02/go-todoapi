@@ -6,7 +6,14 @@ import {
   SAVE_TODO
 } from "../actions";
 
-function todoList(state = {isFetching: false, message: "", todos: []}, action) {
+const initialState = {
+  isFetching: false,
+  message: "",
+  todos: []
+};
+
+
+function todoList(state = initialState, action) {
   switch(action.type) {
     case FETCH_TODOS:
       return Object.assign({}, state, {
@@ -26,7 +33,6 @@ function todoList(state = {isFetching: false, message: "", todos: []}, action) {
         ]
       });
     case ADD_FAILED:
-      console.log(action.message);
       return Object.assign({}, state, {
         message: action.message
       });

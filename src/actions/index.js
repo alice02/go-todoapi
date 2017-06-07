@@ -45,9 +45,9 @@ export function saveTodo(todo) {
 export function createTodo(description) {
   var todo = {completed: false, description: description};
   return (dispatch, getState) => {
-    dispatch(addTodo(todo));
     axios.post("/api/tasks", todo)
          .then(response => {
+           dispatch(addTodo(todo));
            todo.id = response.data.data.id;
            dispatch(saveTodo(todo));
          }).catch(error => {
@@ -69,7 +69,12 @@ function getTodos(store) {
     dispatch(fetchTodos());
     return axios.get("/api/tasks")
     .then(response => {
-      dispatch(receiveTodos(response.data.data.tasks));
+      if (response.data.data.tasks === undefined) {
+        dispatch(receiveTodos([]));
+      }
+      else {
+        dispatch(receiveTodos(response.data.data.tasks));
+      }
     });
   };
 }

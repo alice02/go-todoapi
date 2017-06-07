@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import PropTypes from "prop-types";
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 
@@ -28,5 +28,10 @@ class TodoInput extends React.Component {
     );
   }
 }
+
+TodoInput.propTypes = {
+  isFetching: PropTypes.bool,
+  message: PropTypes.string
+};
 
 export default TodoInput;
