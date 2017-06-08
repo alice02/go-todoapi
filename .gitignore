@@ -2,7 +2,7 @@
 *~
 
 # ignore sqlite db file
-todo.db
+*.db
 
 # ignore node packages
 node_modules
