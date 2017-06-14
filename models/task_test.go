@@ -55,7 +55,7 @@ func TestSaveAndFind(t *testing.T) {
 			t.Errorf("got %v want %v", actual[i].Description, expected[i].Description)
 		}
 		if actual[i].Completed != expected[i].Completed {
-			t.Errorf("got %v want %v", actual[i].Description, expected[i].Description)
+			t.Errorf("got %v want %v", actual[i].Completed, expected[i].Completed)
 		}
 	}
 
