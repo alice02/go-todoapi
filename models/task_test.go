@@ -17,20 +17,48 @@ func TestNewTaskModel(t *testing.T) {
 }
 
 func TestSaveAndFind(t *testing.T) {
+	expected := []Task{
+		{
+			Description: "test1",
+			Completed:   false,
+		},
+		{
+			Description: "test2",
+			Completed:   true,
+		},
+		{
+			Description: "",
+			Completed:   false,
+		},
+	}
+
 	db, err := database.NewDB()
 	if err != nil {
 		panic(err)
 	}
 	db.AutoMigrate(&Task{})
 	u := NewTaskModel(db)
-	task := Task{
-		Description: "test",
-		Completed:   false,
+
+	for _, task := range expected {
+		err = u.Save(&task)
+		if err != nil {
+			t.Errorf("database save failed")
+		}
 	}
-	err = u.Save(&task)
-	if err != nil {
-		t.Errorf("database save failed")
+	actual, err := u.FindAll()
+
+	if len(actual) != len(expected) {
+		t.Errorf("got length %v want %v", len(actual), (expected))
 	}
+	for i := range actual {
+		if actual[i].Description != expected[i].Description {
+			t.Errorf("got %v want %v", actual[i].Description, expected[i].Description)
+		}
+		if actual[i].Completed != expected[i].Completed {
+			t.Errorf("got %v want %v", actual[i].Description, expected[i].Description)
+		}
+	}
+
 	db.DropTableIfExists(&Task{})
 }
 
