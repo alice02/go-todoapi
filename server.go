@@ -10,11 +10,11 @@ import (
 )
 
 func main() {
-	// initialize database
 	db, err := database.NewDB()
 	if err != nil {
 		panic("database connect failed")
 	}
+	db.AutoMigrate(&models.Task{})
 
 	e := echo.New()
 	e.Use(middleware.Logger())
