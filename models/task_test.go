@@ -63,4 +63,41 @@ func TestSaveAndFind(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
+	testData := []Task{
+		{
+			Description: "test1",
+			Completed:   false,
+		},
+		{
+			Description: "test2",
+			Completed:   true,
+		},
+		{
+			Description: "",
+			Completed:   false,
+		},
+	}
+
+	db, err := database.NewDB()
+	if err != nil {
+		panic(err)
+	}
+	db.AutoMigrate(&Task{})
+	u := NewTaskModel(db)
+
+	for _, task := range testData {
+		err = u.Save(&task)
+		if err != nil {
+			t.Errorf("database save failed")
+		}
+		task.Description = "updated"
+		err = u.Update(&task)
+		if err != nil {
+			t.Errorf("database save failed")
+		}
+		if task.Description != "updated" {
+			t.Errorf("got %v want %v", "updated", task.Description)
+		}
+	}
+	db.DropTableIfExists(&Task{})
 }
