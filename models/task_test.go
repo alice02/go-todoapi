@@ -16,6 +16,46 @@ func TestNewTaskModel(t *testing.T) {
 	}
 }
 
+func TestValidate(t *testing.T) {
+	task := Task{
+		Description: "test",
+		Completed:   false,
+	}
+	err := task.Validate()
+	if err != nil {
+		t.Errorf("got %v want nil", err)
+	}
+}
+
+func TestValidateWithInvalidDescription(t *testing.T) {
+	emptyDescription := Task{
+		Description: "",
+		Completed:   false,
+	}
+	actual := emptyDescription.Validate()
+	if actual == nil {
+		t.Errorf("got nil want validate error")
+	}
+	expected := "description: cannot be blank."
+	if actual.Error() != expected {
+		t.Errorf("got %v want %v", actual, expected)
+	}
+
+	overLengthDescription := Task{
+		Description: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+		Completed:   false,
+	}
+	actual = overLengthDescription.Validate()
+	if actual == nil {
+		t.Errorf("got nil want validate error")
+	}
+	expected = "description: the length must be between 1 and 140."
+	if actual.Error() != expected {
+		t.Errorf("got %v want %v", actual, expected)
+	}
+
+}
+
 func TestSaveAndFind(t *testing.T) {
 	expected := []Task{
 		{
