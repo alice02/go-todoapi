@@ -76,6 +76,7 @@ func TestSaveAndFind(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
+	db.DropTableIfExists(&Task{})
 	db.AutoMigrate(&Task{})
 	u := NewTaskModel(db)
 
@@ -88,7 +89,7 @@ func TestSaveAndFind(t *testing.T) {
 	actual, err := u.FindAll()
 
 	if len(actual) != len(expected) {
-		t.Errorf("got length %v want %v", len(actual), (expected))
+		t.Errorf("got length %v want %v", len(actual), len(expected))
 	}
 	for i := range actual {
 		if actual[i].Description != expected[i].Description {
@@ -122,6 +123,7 @@ func TestUpdate(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
+	db.DropTableIfExists(&Task{})
 	db.AutoMigrate(&Task{})
 	u := NewTaskModel(db)
 
@@ -137,6 +139,45 @@ func TestUpdate(t *testing.T) {
 		}
 		if task.Description != "updated" {
 			t.Errorf("got %v want %v", "updated", task.Description)
+		}
+	}
+	db.DropTableIfExists(&Task{})
+}
+
+func TestFindById(t *testing.T) {
+	testData := []Task{
+		{
+			Description: "test1",
+			Completed:   false,
+		},
+		{
+			Description: "test2",
+			Completed:   true,
+		},
+		{
+			Description: "",
+			Completed:   false,
+		},
+	}
+	db, err := database.NewDB()
+	if err != nil {
+		panic(err)
+	}
+	db.DropTableIfExists(&Task{})
+	db.AutoMigrate(&Task{})
+	u := NewTaskModel(db)
+
+	for _, task := range testData {
+		err := u.Save(&task)
+		if err != nil {
+			t.Errorf("save failed")
+		}
+		actual, _ := u.FindByID(int(task.ID))
+		if actual.Description != task.Description {
+			t.Errorf("got %v want %v", actual.Description, task.Description)
+		}
+		if actual.Completed != task.Completed {
+			t.Errorf("got %v want %v", actual.Completed, task.Completed)
 		}
 	}
 	db.DropTableIfExists(&Task{})
