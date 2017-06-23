@@ -2,3 +2,5 @@
 - Golang
 - React
 - Redux
+
+archtechrure is bad...
