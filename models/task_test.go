@@ -16,6 +16,14 @@ func TestNewTaskModel(t *testing.T) {
 	}
 }
 
+func TestValidate(t *testing.T) {
+
+}
+
+func TestValidateWithInvalidDescription(t *testing.T) {
+
+}
+
 func TestSaveAndFind(t *testing.T) {
 	expected := []Task{
 		{
@@ -62,6 +70,10 @@ func TestSaveAndFind(t *testing.T) {
 	db.DropTableIfExists(&Task{})
 }
 
+func TestFindByID(t *testing.T) {
+
+}
+
 func TestUpdate(t *testing.T) {
 	testData := []Task{
 		{
@@ -86,18 +98,25 @@ func TestUpdate(t *testing.T) {
 	u := NewTaskModel(db)
 
 	for _, task := range testData {
-		err = u.Save(&task)
-		if err != nil {
+		if err = u.Save(&task); err != nil {
 			t.Errorf("database save failed")
 		}
 		task.Description = "updated"
-		err = u.Update(&task)
-		if err != nil {
+		if err = u.Update(&task); err != nil {
 			t.Errorf("database save failed")
 		}
-		if task.Description != "updated" {
+		updatedTask, err := u.FindByID(int(task.ID))
+		if err != nil {
+			t.Errorf("database select failed")
+		}
+		if task.Description != updatedTask.Description {
 			t.Errorf("got %v want %v", "updated", task.Description)
 		}
+
 	}
 	db.DropTableIfExists(&Task{})
+}
+
+func TestDelete(t *testing.T) {
+
 }
