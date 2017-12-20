@@ -1,7 +1,7 @@
 import axios from "axios";
 
 axios.defaults.baseURL = "http://localhost:1323";
-axios.defaults.headers.post["Content-Type"] = "application/json"
+axios.defaults.headers.post["Content-Type"] = "application/json";
 
 export const FETCH_TODOS = "FETCH_TODOS";
 export function fetchTodos() {
